@@ -1,0 +1,17 @@
+# Override stacked on top of root docker-compose.yml.
+# Usage:
+#   docker compose -f docker-compose.yml -f e2e/docker/docker-compose.test.yml up -d --build
+#
+# Adds MOCK_ANTHROPIC=true so the server returns canned SSE chunks instead of
+# calling the real Anthropic API. Requires server PR #2 to honor MOCK_ANTHROPIC
+# (tracked via comment on PR #2). Until then, the demo flow falls back to the
+# real ANTHROPIC_API_KEY path — see e2e/README.md.
+
+services:
+  server:
+    environment:
+      MOCK_ANTHROPIC: "true"
+      ANTHROPIC_API_KEY: "mock-not-used"
+      ANCESTOR_DB_PATH: /data/ancestors.db
+    volumes:
+      - ./data-e2e:/data
