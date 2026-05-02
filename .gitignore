@@ -29,8 +29,9 @@ dist/
 .env.local
 .env.*.local
 
-# Data
-data/
+# Data (runtime SQLite + generated artifacts), but keep checked-in samples
+data/*
+!data/sample-ancestors.json
 
 # OS
 .DS_Store
