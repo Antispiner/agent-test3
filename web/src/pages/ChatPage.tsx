@@ -20,7 +20,10 @@ export function ChatPage() {
   }, [id, fetchOne, loadHistory, reset]);
 
   useEffect(() => {
-    scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight });
+    const el = scrollRef.current;
+    if (el && typeof el.scrollTo === "function") {
+      el.scrollTo({ top: el.scrollHeight });
+    }
   }, [messages.length, streaming]);
 
   async function onSubmit(e: FormEvent) {
