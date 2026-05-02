@@ -1,0 +1,37 @@
+# Java
+target/
+*.class
+*.jar
+*.war
+.gradle/
+build/
+
+# Node
+node_modules/
+dist/
+.pnpm-store/
+
+# SQLite
+*.db
+*.db-shm
+*.db-wal
+
+# Vite
+.vite/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Data
+data/
+
+# OS
+.DS_Store
+Thumbs.db
