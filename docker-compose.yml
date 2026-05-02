@@ -1,19 +1,8 @@
 services:
-  server:
-    build: ./server
-    environment:
-      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-      ANCESTOR_DB_PATH: /data/ancestors.db
-    volumes:
-      - ./data:/data
-    expose:
-      - "8080"
-    restart: unless-stopped
-
   nginx:
     build: ./web
     ports:
       - "80:80"
-    depends_on:
-      - server
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     restart: unless-stopped

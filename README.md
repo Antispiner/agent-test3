@@ -7,13 +7,18 @@ nerw-ecosystem agents.
 
 ## Demo
 
+The backend runs on the **host** (it shells out to a local `claude` CLI),
+nginx runs in Docker and proxies `/api/*` to `host.docker.internal:8080`.
+
 ```
 git clone git@github.com:Antispiner/agent-test3.git
 cd agent-test3
-echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
-make demo
-open http://localhost:80
+make demo   # builds jar, runs java on host, nginx in Docker
+open http://localhost
 ```
+
+Then `make down` to stop both. Logs: `make logs` (server stdout) or
+`docker compose logs -f` (nginx).
 
 Add a profile, click the card, ask the question.
 
@@ -39,8 +44,8 @@ back to the browser over SSE.
 - Java 21 + Spring Boot 3.3 (`server/`)
 - React 19 + Vite 7 + Tailwind v4 (`web/`)
 - SQLite via JDBC for persistence
-- Anthropic Claude (Messages API, streaming) for chat
-- Docker Compose for one-shot demo
+- Local `claude` CLI for chat (host-only — backend spawns it as a subprocess)
+- Docker Compose for nginx; backend java runs on the host
 
 ## API
 
