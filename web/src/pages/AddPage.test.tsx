@@ -3,18 +3,21 @@ import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { AddPage } from "./AddPage";
 import { useAncestorsStore } from "../stores/ancestorsStore";
+import { I18nProvider } from "../i18n";
 
 const realFetch = globalThis.fetch;
 
 function setup() {
   return render(
-    <MemoryRouter initialEntries={["/add"]}>
-      <Routes>
-        <Route path="/add" element={<AddPage />} />
-        <Route path="/chat/:id" element={<div>chat-page-id</div>} />
-        <Route path="/" element={<div>home</div>} />
-      </Routes>
-    </MemoryRouter>
+    <I18nProvider initialLang="en">
+      <MemoryRouter initialEntries={["/add"]}>
+        <Routes>
+          <Route path="/add" element={<AddPage />} />
+          <Route path="/chat/:id" element={<div>chat-page-id</div>} />
+          <Route path="/" element={<div>home</div>} />
+        </Routes>
+      </MemoryRouter>
+    </I18nProvider>
   );
 }
 

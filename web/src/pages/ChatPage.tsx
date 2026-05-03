@@ -3,8 +3,10 @@ import { useParams, Link } from "react-router-dom";
 import { useAncestorsStore } from "../stores/ancestorsStore";
 import { useChatStore } from "../stores/chatStore";
 import { MessageRow } from "../components/MessageRow";
+import { useT } from "../i18n";
 
 export function ChatPage() {
+  const t = useT();
   const { id } = useParams<{ id: string }>();
   const { current, fetchOne, error: ancestorErr } = useAncestorsStore();
   const { messages, streaming, isStreaming, error, loadHistory, send, reset } =
@@ -34,7 +36,7 @@ export function ChatPage() {
     await send(id, text);
   }
 
-  if (!id) return <div className="text-red font-mono text-sm">No chat id.</div>;
+  if (!id) return <div className="text-red font-mono text-sm">{t("chat.no_id")}</div>;
 
   return (
     <div className="flex flex-col h-[calc(100vh-12rem)]">
@@ -43,11 +45,11 @@ export function ChatPage() {
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
               <Link to="/" className="text-micro-fg font-mono text-[11px] hover:text-fg">
-                ← back
+                {t("chat.back")}
               </Link>
             </div>
             <h2 className="font-mono text-fg text-[14px] truncate">
-              {current?.name ?? "Loading..."}
+              {current?.name ?? t("chat.loading_ancestor")}
             </h2>
             {current && (
               <div className="flex items-center gap-2 mt-1 flex-wrap">
@@ -76,7 +78,7 @@ export function ChatPage() {
       >
         {messages.length === 0 && !isStreaming && (
           <div className="text-muted-fg text-xs font-mono py-6 text-center">
-            No messages yet. Start the conversation.
+            {t("chat.empty")}
           </div>
         )}
         {messages.map((m, i) => (
@@ -101,7 +103,7 @@ export function ChatPage() {
         <input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Ask your ancestor..."
+          placeholder={t("chat.placeholder")}
           className="input flex-1"
           disabled={isStreaming && !draft}
         />
@@ -110,7 +112,7 @@ export function ChatPage() {
           disabled={!draft.trim()}
           className="btn btn-primary"
         >
-          Send
+          {t("chat.send")}
         </button>
       </form>
     </div>

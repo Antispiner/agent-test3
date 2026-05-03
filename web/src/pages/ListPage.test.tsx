@@ -3,6 +3,7 @@ import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ListPage } from "./ListPage";
 import { useAncestorsStore } from "../stores/ancestorsStore";
+import { I18nProvider } from "../i18n";
 
 const realFetch = globalThis.fetch;
 
@@ -28,9 +29,11 @@ describe("ListPage", () => {
       })
     ) as unknown as typeof fetch;
     render(
-      <MemoryRouter>
-        <ListPage />
-      </MemoryRouter>
+      <I18nProvider initialLang="en">
+        <MemoryRouter>
+          <ListPage />
+        </MemoryRouter>
+      </I18nProvider>
     );
     expect(await screen.findByText(/No ancestors yet\./)).toBeInTheDocument();
     expect(screen.getByText("+ Add ancestor")).toBeInTheDocument();
@@ -47,9 +50,11 @@ describe("ListPage", () => {
       new Response("[]", { status: 200, headers: { "Content-Type": "application/json" } })
     ) as unknown as typeof fetch;
     render(
-      <MemoryRouter>
-        <ListPage />
-      </MemoryRouter>
+      <I18nProvider initialLang="en">
+        <MemoryRouter>
+          <ListPage />
+        </MemoryRouter>
+      </I18nProvider>
     );
     expect(screen.getByText("Anna")).toBeInTheDocument();
     expect(screen.getByText("Boris")).toBeInTheDocument();
@@ -60,9 +65,11 @@ describe("ListPage", () => {
       new Response("oops", { status: 500, statusText: "Server Error" })
     ) as unknown as typeof fetch;
     render(
-      <MemoryRouter>
-        <ListPage />
-      </MemoryRouter>
+      <I18nProvider initialLang="en">
+        <MemoryRouter>
+          <ListPage />
+        </MemoryRouter>
+      </I18nProvider>
     );
     expect(await screen.findByText(/500/)).toBeInTheDocument();
   });
