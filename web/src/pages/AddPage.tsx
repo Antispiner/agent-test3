@@ -1,8 +1,12 @@
 import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAncestorsStore } from "../stores/ancestorsStore";
+import { useT } from "../i18n";
+
+const ANCESTOR_LANGS = ["ru", "be", "uk", "pl", "en"] as const;
 
 export function AddPage() {
+  const t = useT();
   const navigate = useNavigate();
   const create = useAncestorsStore((s) => s.create);
   const [submitting, setSubmitting] = useState(false);
@@ -14,7 +18,7 @@ export function AddPage() {
   const [death, setDeath] = useState("");
   const [birthplace, setBirthplace] = useState("");
   const [profession, setProfession] = useState("");
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState<string>("ru");
   const [photo, setPhoto] = useState("");
   const [lifeEvents, setLifeEvents] = useState("");
   const [traits, setTraits] = useState("");
@@ -55,10 +59,8 @@ export function AddPage() {
 
   return (
     <div className="max-w-2xl">
-      <h1 className="text-fg text-lg font-mono mb-1">Add ancestor</h1>
-      <p className="text-muted-fg text-xs mb-5">
-        Profile fields shape the persona prompt. Be specific.
-      </p>
+      <h1 className="text-fg text-lg font-mono mb-1">{t("form.title")}</h1>
+      <p className="text-muted-fg text-xs mb-5">{t("form.tagline")}</p>
 
       {err && (
         <div className="border border-red/40 bg-red/10 text-red rounded-lg px-3 py-2 text-xs mb-4 font-mono">
@@ -68,7 +70,7 @@ export function AddPage() {
 
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Name">
+          <Field label={t("form.name")}>
             <input
               required
               value={name}
@@ -76,10 +78,10 @@ export function AddPage() {
               className="input"
             />
           </Field>
-          <Field label="Relation">
+          <Field label={t("form.relation")}>
             <input
               required
-              placeholder="great-grandfather"
+              placeholder={t("form.relation.placeholder")}
               value={relation}
               onChange={(e) => setRelation(e.target.value)}
               className="input"
@@ -88,7 +90,7 @@ export function AddPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Birth year">
+          <Field label={t("form.birth_year")}>
             <input
               required
               type="number"
@@ -97,7 +99,7 @@ export function AddPage() {
               className="input"
             />
           </Field>
-          <Field label="Death year">
+          <Field label={t("form.death_year")}>
             <input
               required
               type="number"
@@ -109,7 +111,7 @@ export function AddPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Birthplace">
+          <Field label={t("form.birthplace")}>
             <input
               required
               value={birthplace}
@@ -117,7 +119,7 @@ export function AddPage() {
               className="input"
             />
           </Field>
-          <Field label="Profession">
+          <Field label={t("form.profession")}>
             <input
               required
               value={profession}
@@ -128,15 +130,21 @@ export function AddPage() {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Language">
-            <input
+          <Field label={t("form.language")}>
+            <select
               required
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
               className="input"
-            />
+            >
+              {ANCESTOR_LANGS.map((l) => (
+                <option key={l} value={l}>
+                  {t(`language.${l}`)}
+                </option>
+              ))}
+            </select>
           </Field>
-          <Field label="Photo URL (optional)">
+          <Field label={t("form.photo_url")}>
             <input
               type="url"
               value={photo}
@@ -147,8 +155,8 @@ export function AddPage() {
         </div>
 
         <Field
-          label="Life events"
-          hint="One per line, or comma-separated."
+          label={t("form.life_events")}
+          hint={t("form.life_events.hint")}
         >
           <textarea
             rows={3}
@@ -159,8 +167,8 @@ export function AddPage() {
         </Field>
 
         <Field
-          label="Personality traits"
-          hint="One per line, or comma-separated."
+          label={t("form.personality_traits")}
+          hint={t("form.personality_traits.hint")}
         >
           <textarea
             rows={3}
@@ -171,8 +179,8 @@ export function AddPage() {
         </Field>
 
         <Field
-          label="Historical context"
-          hint="Eras, wars, movements they lived through."
+          label={t("form.historical_context")}
+          hint={t("form.historical_context.hint")}
         >
           <textarea
             rows={3}
@@ -188,14 +196,14 @@ export function AddPage() {
             disabled={submitting}
             className="btn btn-primary"
           >
-            {submitting ? "Saving..." : "Save & open chat"}
+            {submitting ? t("form.submitting") : t("form.submit")}
           </button>
           <button
             type="button"
             onClick={() => navigate("/")}
             className="btn btn-outline"
           >
-            Cancel
+            {t("form.cancel")}
           </button>
         </div>
       </form>

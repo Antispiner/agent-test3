@@ -2,8 +2,10 @@ import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAncestorsStore } from "../stores/ancestorsStore";
 import { AncestorCard } from "../components/AncestorCard";
+import { useT } from "../i18n";
 
 export function ListPage() {
+  const t = useT();
   const { list, loading, error, fetchList } = useAncestorsStore();
 
   useEffect(() => {
@@ -14,13 +16,11 @@ export function ListPage() {
     <div>
       <div className="flex items-center justify-between mb-5">
         <div>
-          <h1 className="text-fg text-lg font-mono">Ancestors</h1>
-          <p className="text-muted-fg text-xs mt-0.5">
-            Speak with the ones who came before.
-          </p>
+          <h1 className="text-fg text-lg font-mono">{t("list.heading")}</h1>
+          <p className="text-muted-fg text-xs mt-0.5">{t("list.tagline")}</p>
         </div>
         <Link to="/add" className="btn btn-primary">
-          + Add
+          {t("list.add")}
         </Link>
       </div>
 
@@ -31,15 +31,17 @@ export function ListPage() {
       )}
 
       {loading && list.length === 0 && (
-        <div className="text-muted-fg text-sm font-mono">Loading...</div>
+        <div className="text-muted-fg text-sm font-mono">
+          {t("list.loading")}
+        </div>
       )}
 
       {!loading && list.length === 0 && !error && (
         <div className="bg-card border border-border rounded-lg p-8 text-center">
-          <p className="text-fg text-sm mb-1">No ancestors yet.</p>
-          <p className="text-muted-fg text-xs mb-4">Add your first one.</p>
+          <p className="text-fg text-sm mb-1">{t("list.empty.title")}</p>
+          <p className="text-muted-fg text-xs mb-4">{t("list.empty.hint")}</p>
           <Link to="/add" className="btn btn-primary">
-            + Add ancestor
+            {t("list.empty.cta")}
           </Link>
         </div>
       )}

@@ -4,17 +4,20 @@ import { MemoryRouter, Routes, Route } from "react-router-dom";
 import { ChatPage } from "./ChatPage";
 import { useAncestorsStore } from "../stores/ancestorsStore";
 import { useChatStore } from "../stores/chatStore";
+import { I18nProvider } from "../i18n";
 
 const realFetch = globalThis.fetch;
 
 function setup(id = "a1") {
   return render(
-    <MemoryRouter initialEntries={[`/chat/${id}`]}>
-      <Routes>
-        <Route path="/chat/:id" element={<ChatPage />} />
-        <Route path="/" element={<div>home</div>} />
-      </Routes>
-    </MemoryRouter>
+    <I18nProvider initialLang="en">
+      <MemoryRouter initialEntries={[`/chat/${id}`]}>
+        <Routes>
+          <Route path="/chat/:id" element={<ChatPage />} />
+          <Route path="/" element={<div>home</div>} />
+        </Routes>
+      </MemoryRouter>
+    </I18nProvider>
   );
 }
 
