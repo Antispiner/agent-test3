@@ -30,7 +30,7 @@ public class ChatController {
     private final AncestorRepository ancestors;
     private final MessageRepository messages;
     private final PersonaPromptBuilder personaBuilder;
-    private final AnthropicClient anthropic;
+    private final ClaudeCliClient claude;
     private final ExecutorService streamExecutor =
             Executors.newCachedThreadPool(r -> {
                 Thread t = new Thread(r, "chat-stream");
@@ -41,11 +41,11 @@ public class ChatController {
     public ChatController(AncestorRepository ancestors,
                           MessageRepository messages,
                           PersonaPromptBuilder personaBuilder,
-                          AnthropicClient anthropic) {
+                          ClaudeCliClient claude) {
         this.ancestors = ancestors;
         this.messages = messages;
         this.personaBuilder = personaBuilder;
-        this.anthropic = anthropic;
+        this.claude = claude;
     }
 
     public record ChatRequest(String message) {}
@@ -57,11 +57,6 @@ public class ChatController {
             return ResponseEntity.status(404)
                     .contentType(MediaType.APPLICATION_JSON)
                     .body(Map.of("error", "ancestor not found"));
-        }
-        if (!anthropic.isConfigured()) {
-            return ResponseEntity.status(500)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Map.of("error", "ANTHROPIC_API_KEY not configured"));
         }
 
         Ancestor ancestor = found.get();
@@ -77,7 +72,7 @@ public class ChatController {
         streamExecutor.submit(() -> {
             try {
                 String system = personaBuilder.build(ancestor);
-                String full = anthropic.streamMessage(system, history, userMsg, chunk -> {
+                String full = claude.streamChat(system, history, userMsg, chunk -> {
                     sendEvent(emitter, Map.of("type", "chunk", "text", chunk));
                 });
                 messages.append(id, "ancestor", full);
